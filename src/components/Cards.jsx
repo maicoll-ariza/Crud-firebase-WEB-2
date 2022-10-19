@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const Cards = ({ equipo }) => {
+export const Cards = ({ equipo, deleteEquipo, activeModEdit }) => {
 
-    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga, fechaFundacion, img } = equipo
+    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga, fechaFundacion, img, id } = equipo
 
   return (
     <div>
@@ -20,10 +20,14 @@ export const Cards = ({ equipo }) => {
               <li className="list-group-item">Fecha de fundación: { fechaFundacion }</li>
             </ul>
             <div className="card-body d-flex justify-content-evenly">
-              <button>
+              <button 
+                className='btn btn-outline-danger'
+                onClick={ ()=> deleteEquipo( id ) }>
                 Eliminar
               </button>
-              <button>
+              <button 
+                className='btn btn-outline-warning'
+                onClick={ ()=> activeModEdit( equipo ) }>
                 Editar
               </button>
             </div>

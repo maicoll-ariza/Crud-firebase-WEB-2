@@ -1,13 +1,18 @@
 import React from 'react'
 import { useForm } from '../hooks/useForm'
 
-export const Formulario = ({ initialForm, SetNewEquipo }) => {
+export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo }) => {
     const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, handleInputChange, handleResetForm, formState } = useForm( initialForm )
 
     const handleSubmit = e => {
         e.preventDefault()
 
-        SetNewEquipo(formState)
+        if ( modEdicion ) {
+            updateEquipo( formState )
+        } else {
+            SetNewEquipo( formState )
+        }
+
     }
 
   return (
