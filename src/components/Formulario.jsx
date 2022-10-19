@@ -1,12 +1,18 @@
 import React from 'react'
 import { useForm } from '../hooks/useForm'
 
-export const Formulario = ({ initialForm }) => {
-    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, handleInputChange, handleResetForm } = useForm( initialForm )
+export const Formulario = ({ initialForm, SetNewEquipo }) => {
+    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, handleInputChange, handleResetForm, formState } = useForm( initialForm )
+
+    const handleSubmit = e => {
+        e.preventDefault()
+
+        SetNewEquipo(formState)
+    }
 
   return (
     <div>
-        <form>
+        <form onSubmit={ handleSubmit }>
             <div className='form-floating mb-3'>
                 <input 
                     className='form-control'
@@ -70,11 +76,11 @@ export const Formulario = ({ initialForm }) => {
             
             <select className='form-select mb-3' name='liga' value={ liga } onInput={ handleInputChange } >
                 <option value="">--Selecciona--</option>
-                <option value="laLiga">LaLiga</option>
-                <option value="ligue-1">Ligue 1</option>
-                <option value="bundesliga">Bundesliga</option>
-                <option value="premier">Premier League</option>
-                <option value="serie-a">Serie A</option>
+                <option value="LaLiga">LaLiga</option>
+                <option value="Ligue-1">Ligue 1</option>
+                <option value="Bundesliga">Bundesliga</option>
+                <option value="Premier League">Premier League</option>
+                <option value="Serie-A">Serie A</option>
             </select>
             <input 
                 className='form-control mb-3'
@@ -87,7 +93,7 @@ export const Formulario = ({ initialForm }) => {
                 <button className='btn btn-outline-primary' type='submit'>
                     Agregar
                 </button>
-                <button className='btn btn-outline-danger'>
+                <button type='button' className='btn btn-outline-danger'>
                     Limpiar
                 </button>
             </div>
