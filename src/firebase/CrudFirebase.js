@@ -21,10 +21,11 @@ export const startLoadEquipos = async () => {
 export const startSetNewEquipo = async( newEquipo) => {
 
     const ref = doc( collection( FirebaseDB, 'equipos/' ) )
+    delete newEquipo.id
     await setDoc( ref, newEquipo )
 
-    let id = ref.id
-    console.log(id);
+    const id = ref.id
+    console.log(id + ' en log en basedatos');
 
     return id
 }
@@ -40,7 +41,7 @@ export const startUpdatingEquipo = async ({ id, nombreEquipo, nombreEstadio, nom
    
     console.log({id, nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, img});
     const ref = doc( FirebaseDB, `/equipos/${ id }` )
-    await updateDoc( ref, { id, nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, img } )
-    console.log('log 2');
+    await updateDoc( ref, ({ nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, img }) )
+    
 
 }

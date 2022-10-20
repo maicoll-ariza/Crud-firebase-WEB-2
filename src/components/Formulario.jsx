@@ -1,25 +1,43 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useForm } from '../hooks/useForm'
 
-export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo }) => {
-    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, handleInputChange, handleResetForm, formState } = useForm( initialForm )
+const resetForm = {
+    nombreEquipo: '',
+    nombreEstadio: '',
+    nombreTecnico: '',
+    nombreCapitan: '',
+    canTitulos: 0,
+    liga: '',
+    fechaFundacion:''
+}
 
-    const handleSubmit = e => {
+export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo, loading, setModEdicion, inputRef }) => {
+    const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, flexRadioDefault = '',  handleInputChange, handleResetForm, formState } = useForm( initialForm )
+
+    const handleSubmit =async (e) => {
         e.preventDefault()
 
         if ( modEdicion ) {
-            updateEquipo( formState )
+            await updateEquipo( formState )
         } else {
-            SetNewEquipo( formState )
+             await SetNewEquipo( formState )
         }
+        handleResetForm(resetForm)
+    }
 
+    const cancelarEdicion = () => {
+        setModEdicion( false )
+        handleResetForm(resetForm)
     }
 
   return (
-    <div>
-        <form onSubmit={ handleSubmit }>
+        <form 
+            className='col-12 col-sm-10- col-md-7 col-lg-5  pb-3 px-3 border shadow rounded' 
+            onSubmit={ handleSubmit }>
+                <h3 className='pt-3'>{ modEdicion ? 'Editar' : 'Agregar'} información</h3>
             <div className='form-floating mb-3'>
                 <input 
+                    ref={ inputRef }
                     className='form-control'
                     type="text"
                     placeholder='Nombre del equipo'
@@ -94,15 +112,34 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
                 value={ fechaFundacion }
                 onChange={ handleInputChange }
                  />
+            {
+                modEdicion && 
+                (   <>  
+                        <p className='text-center'>¿Deseas conservar la imagen?</p>
+                        <div className='d-flex justify-content-center gap-3'>
+                            <div className="form-check">
+                              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value='no' onChange={ handleInputChange }/>
+                              <label className="form-check-label" htmlFor="flexRadioDefault1">
+                                No
+                              </label>
+                            </div>
+                            <div className="form-check mb-2">
+                              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value='si' defaultChecked onChange={ handleInputChange }/>
+                              <label className="form-check-label " htmlFor="flexRadioDefault2"   >
+                                Sí
+                              </label>
+                            </div>
+                        </div> 
+                    </>)
+            }
             <div className='d-flex justify-content-evenly gap-3 align-items-center'>
-                <button className='btn btn-outline-primary' type='submit'>
-                    Agregar
+                <button className={`btn btn-outline-${ modEdicion ? 'warning' : 'primary' }`} type='submit' disabled={ loading }>
+                    { modEdicion ? 'Actualizar' : 'Agregar'}
                 </button>
-                <button type='button' className='btn btn-outline-danger'>
-                    Limpiar
+                <button onClick={ cancelarEdicion } type='button' className={`btn btn-outline-${ modEdicion ? 'warning' : 'primary' }`} disabled={ loading }>
+                    { modEdicion ? 'Cancelar' : 'Limpiar'}
                 </button>
             </div>
         </form>
-    </div>
   )
 }
