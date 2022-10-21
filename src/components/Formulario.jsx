@@ -11,11 +11,40 @@ const resetForm = {
     fechaFundacion:''
 }
 
-export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo, loading, setModEdicion, inputRef }) => {
+export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo, loading, setModEdicion, inputRef, setError, error }) => {
     const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga,fechaFundacion, flexRadioDefault = '',  handleInputChange, handleResetForm, formState } = useForm( initialForm )
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        const pattern = RegExp("^[a-zA-Z ]+$")
+
+        if ( !pattern.test( nombreEquipo ) ) {
+            return setError('Nombre de equipo no puede contener números ni caracteres especiales')
+        } else if ( nombreEquipo.trim().length === 0 ) {
+            return setError('Nombre de equipo inválido')
+        } else if ( !pattern.test( nombreEstadio )) {
+            return setError('El nombre de estadio no puede contener números ni caracteres especiales')
+        } else if ( nombreEstadio.trim().length === 0 ) {
+            return setError('Nombre de estadio de fútbol inválido')
+        } else if ( nombreTecnico.trim().length === 0 ) {
+            return setError('Nombre de técnico inválido')
+        } else if ( nombreTecnico.length <= 4 ) {
+            return setError('Nombre de técnico de fútbol muy corto')
+        } else if ( !pattern.test( nombreTecnico )) {
+            return setError('El nombre del ténico deportivo no puede contener números ni caracteres especiales')
+        } else if ( nombreCapitan.trim().length === 0 ) {
+            return setError('Nombre del cápitan inválido')
+        } else if ( nombreCapitan.length <= 4 ) {
+            return setError('Nombre de capitán muy corto')
+        } else if ( !pattern.test( nombreCapitan )) {
+            return setError('El nombre del capitán de campo no puede contener números ni caracteres especiales')
+        } else if ( canTitulos < 0 ) {
+            return setError('El número de titulos es invalido. Ingrese un número mayor o igual a cero ')
+        } else if ( liga === "" ) {
+            return setError('Agregue la liga a la que pertenece el club ')
+        } else if ( fechaFundacion === "" ) {
+            return setError('Agregue la fecha en la que se fundó el equipo')
+        }
 
         if ( modEdicion ) {
             await updateEquipo( formState )
@@ -23,20 +52,30 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
              await SetNewEquipo( formState )
         }
         handleResetForm(resetForm)
+        setError( false )
     }
 
     const cancelarEdicion = () => {
         setModEdicion( false )
         handleResetForm(resetForm)
+        setError( false )
     }
 
   return (
         <form 
-            className='col-12 col-sm-10- col-md-7 col-lg-5  pb-3 px-3 border shadow rounded' 
+            className='col-12 col-sm-10 col-md-6 col-lg-4 pb-3 px-3 border shadow rounded' 
             onSubmit={ handleSubmit }>
                 <h3 className='pt-3'>{ modEdicion ? 'Editar' : 'Agregar'} información</h3>
+                {
+                    ( error ) && (
+                        <div className="alert alert-danger" role="alert">
+                            { error }
+                        </div>
+                    )
+                }
             <div className='form-floating mb-3'>
                 <input 
+                    required
                     ref={ inputRef }
                     className='form-control'
                     type="text"
@@ -51,6 +90,7 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
             <div className='form-floating mb-3'>
                 <input 
                     className='form-control'
+                    required
                     type="text"
                     placeholder='Nombre del estadio de fútbol'
                     id="estadio"
@@ -62,6 +102,7 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
             </div>
             <div className='form-floating mb-3'>
                 <input 
+                    required
                     className='form-control'
                     type="text"
                     placeholder='Nombre del Director técnico'
@@ -74,6 +115,7 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
             </div>
             <div className='form-floating mb-3'>
                 <input 
+                    required
                     className='form-control'
                     type="text"
                     placeholder='Nombre del capitán'
@@ -86,6 +128,7 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
             </div>
             <div className='form-floating mb-3'>
                 <input
+                    required
                     className='form-control'
                     type="number"
                     placeholder='Numero de títulos obtenidos'
@@ -97,7 +140,7 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
                 <label htmlFor="titulos">Numero de títulos obtenidos</label>
             </div>
             
-            <select className='form-select mb-3' name='liga' value={ liga } onInput={ handleInputChange } >
+            <select required className='form-select mb-3' name='liga' value={ liga } onInput={ handleInputChange } >
                 <option value="">--Selecciona--</option>
                 <option value="LaLiga">LaLiga</option>
                 <option value="Ligue-1">Ligue 1</option>
@@ -106,6 +149,8 @@ export const Formulario = ({ initialForm, SetNewEquipo, modEdicion, updateEquipo
                 <option value="Serie-A">Serie A</option>
             </select>
             <input 
+                required
+                placeholder='Fecha'
                 className='form-control mb-3'
                 type="date"
                 name='fechaFundacion'

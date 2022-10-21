@@ -18,6 +18,7 @@ export const CrudAplication = () => {
     const [equipos, setEquipos] = useState([])
     const [initialForm, setInitialForm] = useState( initialValue )
     const [modEdicion, setModEdicion] = useState( false )
+    const [error, setError] = useState( false )
     const [loading, setLoading] = useState( false )
 
     const cargarEquipos = async () => {
@@ -36,11 +37,11 @@ export const CrudAplication = () => {
         const url = await getImage()
         newEquipo.img = url
         delete newEquipo.id
-        console.log(newEquipo.id + 'log en local')
+        console.log('1 '+newEquipo.id + 'log en local 111')
         const id = await startSetNewEquipo( newEquipo )
-        console.log(newEquipo.id + 'log en local')
+        console.log('2 '+newEquipo.id + 'log en local 222')
         newEquipo.id = id
-        console.log(newEquipo.id + 'log en local')
+        console.log('3 '+newEquipo.id + 'log en local 333')
         setEquipos([
             ...equipos,
             newEquipo
@@ -83,7 +84,7 @@ export const CrudAplication = () => {
         inputRef.current.focus()
         setInitialForm( equipo )
         setModEdicion( true )
-
+        setError( false )
     }
 
   return (
@@ -91,6 +92,8 @@ export const CrudAplication = () => {
         <h1 className='mt-3 mb-4 text-center'>Base de Datos sobre equipos de fútbol</h1>
         <div className='d-flex justify-content-center mb-4'>
             <Formulario 
+                setError={ setError }
+                error={ error }
                 inputRef={ inputRef }
                 loading={ loading }
                 setModEdicion={ setModEdicion }
@@ -100,7 +103,7 @@ export const CrudAplication = () => {
                 updateEquipo={ updateEquipo } />
         </div>
         <hr />
-        <div className='d-flex justify-content-evenly flex-wrap gap-3 my-4'>
+        <div className='d-flex justify-content-evenly flex-wrap gap-3 my-4 p-4'>
             {
                 equipos.map( equipo => (
                     <Cards key={ equipo.id } deleteEquipo={ deleteEquipo } loading={ loading } equipo={ equipo } activeModEdit={ setModoEdición } />

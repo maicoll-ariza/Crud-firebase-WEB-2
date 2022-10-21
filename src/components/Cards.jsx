@@ -5,7 +5,7 @@ export const Cards = ({ equipo, deleteEquipo, activeModEdit }) => {
     const { nombreEquipo, nombreEstadio, nombreTecnico, nombreCapitan, canTitulos, liga, fechaFundacion, img, id } = equipo
 
   return (
-    <div className='col-12 col-sm-8 col-md-5 col-lg-4 col-xl-3 shadow'>
+    <div className='col-12 col-sm-8 col-md-5 col-lg-4 col-xl-3 shadow mt-3'>
         <div className="card ">
             <img src={ img } className="card-img-top" alt="Imagen aleatoria"/>
             <div className="card-body">
